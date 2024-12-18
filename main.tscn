@@ -1,0 +1,178 @@
+[gd_scene load_steps=5 format=3 uid="uid://c6cys4wvtc10m"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_1dkn0"]
+[ext_resource type="FontFile" uid="uid://bf3vpcacdmib" path="res://fonts/Atkinson-Hyperlegible-Regular-102.ttf" id="2_3j3ev"]
+
+[sub_resource type="Theme" id="Theme_horxv"]
+
+[sub_resource type="ImageTexture" id="ImageTexture_dcbga"]
+
+[node name="Main" type="Node" node_paths=PackedStringArray("character_sprite")]
+script = ExtResource("1_1dkn0")
+player_alignment = 2
+character_sprite = NodePath("Player/character")
+
+[node name="title" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -82.0
+offset_top = -10.0
+offset_right = 92.0
+offset_bottom = 13.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_3j3ev")
+theme_override_font_sizes/font_size = 20
+text = "flood"
+horizontal_alignment = 1
+vertical_alignment = 3
+
+[node name="photons" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="photon-label" type="Label" parent="photons"]
+offset_left = 103.0
+offset_top = 47.0
+offset_right = 181.0
+offset_bottom = 70.0
+text = "PHOTONS"
+
+[node name="photon-count" type="Label" parent="photons"]
+offset_left = 205.0
+offset_top = 49.0
+offset_right = 379.0
+offset_bottom = 72.0
+theme_override_fonts/font = ExtResource("2_3j3ev")
+theme_override_font_sizes/font_size = 20
+text = "100"
+vertical_alignment = 3
+
+[node name="stamina" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="stamina-label" type="Label" parent="stamina"]
+offset_left = 104.0
+offset_top = 81.0
+offset_right = 190.0
+offset_bottom = 104.0
+theme_override_fonts/font = ExtResource("2_3j3ev")
+theme_override_font_sizes/font_size = 20
+text = "STAMINA
+"
+
+[node name="stamina-count" type="Label" parent="stamina"]
+offset_left = 207.0
+offset_top = 81.0
+offset_right = 247.0
+offset_bottom = 104.0
+theme_override_fonts/font = ExtResource("2_3j3ev")
+theme_override_font_sizes/font_size = 20
+text = "100
+"
+
+[node name="fruits" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 396.0
+offset_bottom = 208.0
+
+[node name="fruit-count" type="Label" parent="fruits"]
+offset_left = 210.0
+offset_top = 114.0
+offset_right = 250.0
+offset_bottom = 137.0
+theme_override_fonts/font = ExtResource("2_3j3ev")
+theme_override_font_sizes/font_size = 20
+text = "0"
+
+[node name="fruit-label" type="Label" parent="fruits"]
+layout_mode = 0
+offset_left = 105.0
+offset_top = 112.0
+offset_right = 159.0
+offset_bottom = 135.0
+theme_override_fonts/font = ExtResource("2_3j3ev")
+theme_override_font_sizes/font_size = 20
+text = "FRUITS"
+
+[node name="item-text" type="Label" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -117.0
+offset_right = 20.0
+offset_bottom = -94.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("2_3j3ev")
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+
+[node name="key" type="Label" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -167.0
+offset_top = 39.0
+offset_right = -65.0
+offset_bottom = 114.0
+grow_horizontal = 0
+theme = SubResource("Theme_horxv")
+theme_override_fonts/font = ExtResource("2_3j3ev")
+theme_override_font_sizes/font_size = 20
+text = "[x] = beam
+[z] = rest
+[_]= jump
+"
+horizontal_alignment = 2
+
+[node name="flood_warning" type="Label" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_top = 47.0
+offset_right = 20.0
+offset_bottom = 70.0
+grow_horizontal = 2
+horizontal_alignment = 1
+
+[node name="Player" type="Node2D" parent="."]
+
+[node name="weapon" type="Sprite2D" parent="Player"]
+
+[node name="character" type="Sprite2D" parent="Player"]
+
+[node name="ui" type="Button" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -112.0
+offset_top = -116.0
+offset_right = -63.0
+offset_bottom = -86.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("2_3j3ev")
+theme_override_font_sizes/font_size = 20
+text = "clap"
+icon = SubResource("ImageTexture_dcbga")
+
+[node name="timer" type="Timer" parent="."]
+
+[connection signal="pressed" from="ui" to="." method="_on_ui_pressed"]
+[connection signal="timeout" from="timer" to="." method="_on_timer_timeout"]
