@@ -1,14 +1,44 @@
 extends Node
 
+## this code was written following the video by brackeys
+## https://www.youtube.com/watch?v=e1zJS31tr88&t=2684s&ab_channel=Brackeys
+
+## nodes are classes, scripts are also like classes
+
 # static typing of the variable
 # the @export decorator allows you to set the value of a variable using the inspector
-@export var photons: int = 100
-@export var stamina: int = 100
 @export var fruits: float = 0
 @export var player_alignment: Alignment
 @export var character_sprite: Sprite2D
+@export var character_to_attack: Character
 
+signal photons_changed(new_photons)
+signal stamina_changed(new_stamina)
 signal flooded(msg)
+
+
+# setter value
+
+## initial chance value
+var chance := 0.2
+var chance_pct: int:
+	# return the chance percentage based on a change in the chance
+	get:
+		return chance * 100
+	# set the chance based on the percentage
+	set(value):
+		chance = float(value) / 100.0
+
+# setter example
+var photons := 100:
+	set(value):
+		photons = clamp(value, 0, 100)
+		photons_changed.emit(photons)
+
+var stamina := 100:
+	set(value):
+		stamina = clamp(value, 0, 100)
+		stamina_changed.emit(stamina)
 
 var flood_counter := 0
 
@@ -22,6 +52,10 @@ enum Alignment { NEUTRAL, PREDATOR, PREY  }
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	
+	print(chance_pct)
+	chance_pct = 40
+	print(chance_pct)
 	# setup
 	$title.text = "flood"
 	$title.modulate = Color.WHITE_SMOKE
@@ -48,13 +82,14 @@ func _ready() -> void:
 			print("==")
 		_:
 			print("ghost")
+	
+	character_to_attack.evaporate()
 
 func _input(event):
 	if event.is_action_pressed("move"):
 		if(stamina > 0):
 			$title.text = "[_] you jumped!"
 			stamina -= 5
-			update_stamina()
 		else:
 			$title.text = "please rest!"
 	
@@ -63,8 +98,6 @@ func _input(event):
 			$title.text = "[x] photon beam!"
 			photons -= 5
 			stamina -= 1
-			update_stamina()
-			update_photon()
 			var item_search = randf()
 			var metric = randi_range(0, 360)
 			if item_search <= 0.8:
@@ -90,34 +123,23 @@ func _input(event):
 		$title.text = "[z] you rested!"
 		if stamina < 100:
 			stamina += 5
-			update_stamina()
 		if photons < 100:
 			photons += 5
-			update_photon()
 			
 
 # static typing syntax
 func add(num1: int, num2: int) -> int:
 	var result = num1 + num2
 	return result
-
-func update_photon():
-	$"photons/photon-count".text = str(photons)
-
-func update_stamina():
-	$"stamina/stamina-count".text = str(stamina)
-
+	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if photons <= 0 or stamina <= 0:
 		photons = 5
 		stamina = 5
-		update_photon()
-		update_stamina()
 		$title.text = "you materialized"
 	if stamina > 100:
 		stamina = 100
-		update_stamina()
 	pass
 
 # example of a signal
@@ -135,5 +157,15 @@ func _on_timer_timeout() -> void:
 	pass # Replace with function body.
 
 
-func _on_flooded(msg):
+func _on_flooded(msg: Variant) -> void:
 	$flood_warning.text = msg
+
+
+func _on_photons_changed(new_photons: Variant) -> void:
+	$"photons/photon-count".text = str(photons)
+	pass # Replace with function body.
+
+
+func _on_stamina_changed(new_stamina: Variant) -> void:
+	$"stamina/stamina-count".text = str(stamina)
+	pass # Replace with function body.
